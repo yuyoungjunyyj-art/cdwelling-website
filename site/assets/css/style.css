@@ -501,25 +501,25 @@ html[lang="ja"] p, html[lang="ko"] p { max-width: 38em; }
 
 .nav a, .lang-switch { white-space: nowrap; }
 
-/* Hero: light illustration at every width with charcoal type; the empty left side of the image holds the text */
+/* Hero: warm photo with charcoal type; tablets and phones keep the building in frame behind a paper veil */
 @media (max-width: 1000px) {
-  .hero::before { background: rgba(236,230,220,0.62); }
-  .hero .ph > img { object-position: 66% center; }
+  .hero::before { background: linear-gradient(180deg, rgba(236,230,220,0.6) 0%, rgba(236,230,220,0.72) 45%, rgba(236,230,220,0.86) 100%); }
+  .hero .ph > img { object-position: right center; }
 }
 .hero .markets-line { max-width: none; }
 html[lang="ja"] .hero p:not(.markets-line), html[lang="ko"] .hero p:not(.markets-line) { max-width: 28em; }
 
-/* Desktop hero: shift the illustration right so the text sits on its empty paper area, and fade the header zone */
+/* Desktop hero: text sits on the plain wall at left; the crop favours the building and the people at its base */
 @media (min-width: 1001px) {
-  .hero { background: #f8efe0; }
-  .hero .ph { background-color: #f8efe0; }
-  .hero .ph > img { transform: translateX(10%); }
+  .hero { background: #e9dcc4; }
+  .hero .ph { background-color: #e9dcc4; }
+  .hero .ph > img { object-position: right 85%; }
   .hero::before {
     background:
-      linear-gradient(180deg, rgba(248,239,224,0.94) 0%, rgba(248,239,224,0.72) 9%, rgba(248,239,224,0) 19%),
-      linear-gradient(90deg, #f8efe0 0%, #f8efe0 12%, rgba(248,239,224,0.8) 36%, rgba(248,239,224,0) 52%);
+      linear-gradient(180deg, rgba(248,239,224,0.9) 0%, rgba(248,239,224,0.62) 9%, rgba(248,239,224,0) 19%),
+      linear-gradient(90deg, rgba(248,239,224,0.82) 0%, rgba(248,239,224,0.68) 26%, rgba(248,239,224,0.3) 40%, rgba(248,239,224,0) 52%);
   }
   .hero h1 { font-size: clamp(2.8rem, 5.4vw, 5rem); }
-  .hero p:not(.markets-line) { max-width: 40ch; }
+  .hero p:not(.markets-line) { max-width: 38ch; }
   .hero .markets-line { letter-spacing: 0.2em; }
 }
