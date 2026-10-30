@@ -59,16 +59,17 @@
     if (radio) radio.checked = true;
   }
 
-  // Contact form is not yet connected to a form service: keep the page in place and say so
+  // Contact form: send through FormSubmit and show the result on the page
   var form = document.querySelector("form.form");
-  if (form && form.getAttribute("action") === "#") {
+  if (form && form.action.indexOf("formsubmit.co") !== -1) {
+    var copy = {
+      en: { sending: "Sending…", ok: "Thank you. Your enquiry has been sent.", fail: "Your enquiry could not be sent. Please email us at dwell@cdwelling.com." },
+      ja: { sending: "送信しています…", ok: "お問い合わせを送信しました。ありがとうございます。", fail: "送信できませんでした。dwell@cdwelling.com までメールでご連絡ください。" },
+      ko: { sending: "보내는 중입니다…", ok: "문의가 전송되었습니다. 감사합니다.", fail: "문의를 보내지 못했습니다. dwell@cdwelling.com 으로 메일을 보내 주십시오." }
+    }[document.documentElement.lang];
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var lang = document.documentElement.lang;
-      var msg = {
-        ja: "このフォームはまだ送信先に接続されていません。",
-        ko: "이 문의 양식은 아직 전송 서비스와 연결되지 않았습니다."
-      }[lang] || "This form is not yet connected to a form service.";
+      var button = form.querySelector("button[type=submit]");
       var note = form.querySelector(".form__note");
       if (!note) {
         note = document.createElement("p");
@@ -76,7 +77,21 @@
         note.setAttribute("role", "status");
         form.appendChild(note);
       }
-      note.textContent = msg;
+      note.textContent = copy.sending;
+      button.disabled = true;
+      fetch(form.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        if (String(data.success) !== "true") throw new Error(data.message);
+        form.reset();
+        note.textContent = copy.ok;
+      }).catch(function () {
+        note.textContent = copy.fail;
+      }).finally(function () {
+        button.disabled = false;
+      });
     });
   }
 
