@@ -51,6 +51,9 @@ ${alternates}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?${L.fonts}&display=swap" rel="stylesheet">
+  <link rel="icon" href="${root}favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="${root}favicon-32.png">
+  <link rel="apple-touch-icon" href="${root}apple-touch-icon.png">
   <link rel="stylesheet" href="${root}assets/css/style.css">${ld}
 </head>`;
 }
@@ -165,5 +168,41 @@ for (const lang of langCodes) {
     count++;
   }
 }
+// 404 page: served at any address, so all of its links must start from the site root
+function notFoundPage() {
+  cfg.langs.en.meta["404"] = ["Page not found | Conservation Dwelling", "This page could not be found."];
+  const body = `  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">404</span>
+      <h1>This page could not be found.</h1>
+      <p class="lede">The address may have changed, or the page may no longer exist.</p>
+      <p lang="ja">お探しのページが見つかりませんでした。</p>
+      <p lang="ko">찾으시는 페이지를 찾을 수 없습니다.</p>
+      <div class="btn-row">
+        <a href="index.html" class="btn btn--solid">Back to Home</a>
+        <a href="contact.html" class="btn btn--ghost">Contact Us</a>
+      </div>
+    </div>
+  </section>`;
+  const html = [head("en", "404"), "<body>", "", header("en", "404"), "", "<main>", "", body, "", "</main>", "", footer("en")].join("\n")
+    .replace(/\s*<link rel="(canonical|alternate)"[^>]*>/g, "")
+    .replace(/\s*<meta property="og:[^>]*>/g, "")
+    .replace("</title>", '</title>\n  <meta name="robots" content="noindex">')
+    .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, '$1="/$2"');
+  fs.writeFileSync(path.join(OUT, "404.html"), html);
+}
+
+// Search engine files
+function seoFiles() {
+  const urls = langCodes.flatMap((lang) => cfg.pages.map((page) => {
+    const alts = langCodes.map((c) => `    <xhtml:link rel="alternate" hreflang="${cfg.langs[c].htmlLang}" href="${urlOf(c, page)}"/>`).join("\n");
+    return `  <url>\n    <loc>${urlOf(lang, page)}</loc>\n${alts}\n  </url>`;
+  }));
+  fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join("\n")}\n</urlset>\n`);
+  fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${cfg.baseUrl}/sitemap.xml\n`);
+}
+
+notFoundPage();
+seoFiles();
 console.log(`Built ${count} pages.`);
 if (missingImages.size) console.log(`Images still using placeholders (${missingImages.size}): ${[...missingImages].join(", ")}`);
