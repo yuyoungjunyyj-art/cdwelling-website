@@ -1,0 +1,9 @@
+# Internal documents: never publish
+Dwelling master prompt.txt
+IMAGE_PROMPTS.md
+images-original/
+*.pdf
+
+# Local tooling
+.claude/
+node_modules/
