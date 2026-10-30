@@ -138,8 +138,8 @@ function swapImages(html, lang) {
       const file = findImage(name);
       if (!file) { missingImages.add(name); return match; }
       const alt = label.replace(/^[^—]*—\s*/, "");
-      const eager = name.startsWith("hero") ? ' fetchpriority="high"' : ' loading="lazy"';
-      return `<div class="${cls} has-img"${rest}><img src="${root}assets/img/${file}" alt="${alt}"${eager} decoding="async"></div>`;
+      const eager = name.startsWith("hero") ? ' fetchpriority="high" decoding="sync"' : ' loading="lazy" decoding="async"';
+      return `<div class="${cls} has-img"${rest}><img src="${root}assets/img/${file}" alt="${alt}"${eager}></div>`;
     });
 }
 

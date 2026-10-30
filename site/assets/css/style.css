@@ -122,7 +122,6 @@ body:not(.has-hero) .site-header {
   border-color: var(--line);
   color: var(--charcoal);
 }
-/* Hero is light, so the header keeps charcoal text over it */
 
 .brand { display: flex; flex-direction: column; line-height: 1; }
 .brand__name { font-family: var(--serif); font-size: 1.45rem; letter-spacing: 0.02em; }
@@ -206,21 +205,25 @@ body:not(.has-hero) .site-header {
   min-height: 100svh;
   display: flex;
   align-items: flex-end;
-  color: var(--charcoal);
-  background: var(--paper);
+  color: var(--paper);
+  background: #1d1c19;
 }
-/* Light hero: bright plaster photo, charcoal type, a soft paper-coloured veil behind the text */
-.hero .ph { position: absolute; inset: 0; aspect-ratio: auto; background-color: var(--paper); }
+/* Sunlit building at right; the left falls into shadow to carry light text */
+.hero .ph { position: absolute; inset: 0; aspect-ratio: auto; background-color: #1d1c19; }
 .hero .ph > img { object-position: right center; }
 .hero::before {
   content: "";
   position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(90deg, rgba(236,230,220,0.6) 0%, rgba(236,230,220,0.32) 35%, rgba(236,230,220,0) 52%);
+  background:
+    linear-gradient(90deg, rgba(20,19,17,0.86) 0%, rgba(20,19,17,0.72) 28%, rgba(20,19,17,0.38) 46%, rgba(20,19,17,0) 64%),
+    linear-gradient(180deg, rgba(20,19,17,0.58) 0%, rgba(20,19,17,0.28) 12%, rgba(20,19,17,0) 24%);
 }
 .hero__content { position: relative; z-index: 2; padding-top: 140px; padding-bottom: clamp(56px, 8vw, 100px); width: 100%; }
-.hero h1 { max-width: 12ch; font-size: clamp(2.8rem, 6vw, 5.4rem); }
-.hero p { color: var(--charcoal); font-size: clamp(1rem, 1.3vw, 1.15rem); max-width: 42ch; }
-.hero .markets-line { color: var(--ink-soft); }
+.hero h1 { max-width: 12ch; font-size: clamp(2.8rem, 5.4vw, 5rem); }
+.hero p { color: rgba(236, 230, 220, 0.92); font-size: clamp(1rem, 1.3vw, 1.15rem); max-width: 40ch; }
+.hero .btn--solid { background: var(--paper); color: var(--charcoal); border-color: var(--paper); }
+.hero .btn--solid:hover { background: var(--stone); border-color: var(--stone); }
+body.has-hero:not(.nav-open) .site-header:not(.is-solid) { color: var(--paper); }
 
 .page-hero { padding: calc(84px + var(--section) * 0.7) 0 calc(var(--section) * 0.5); }
 .page-hero h1 { max-width: 16ch; }
@@ -501,25 +504,13 @@ html[lang="ja"] p, html[lang="ko"] p { max-width: 38em; }
 
 .nav a, .lang-switch { white-space: nowrap; }
 
-/* Hero: warm photo with charcoal type; tablets and phones keep the building in frame behind a paper veil */
+/* Tablets and phones: keep the bay windows in frame behind a stronger shadow */
 @media (max-width: 1000px) {
-  .hero::before { background: linear-gradient(180deg, rgba(236,230,220,0.6) 0%, rgba(236,230,220,0.72) 45%, rgba(236,230,220,0.86) 100%); }
-  .hero .ph > img { object-position: right center; }
-}
-.hero .markets-line { max-width: none; }
-html[lang="ja"] .hero p:not(.markets-line), html[lang="ko"] .hero p:not(.markets-line) { max-width: 28em; }
-
-/* Desktop hero: text sits on the plain wall at left; the crop favours the building and the people at its base */
-@media (min-width: 1001px) {
-  .hero { background: #e9dcc4; }
-  .hero .ph { background-color: #e9dcc4; }
-  .hero .ph > img { object-position: right 85%; }
+  .hero .ph > img { object-position: 74% center; }
   .hero::before {
     background:
-      linear-gradient(180deg, rgba(248,239,224,0.9) 0%, rgba(248,239,224,0.62) 9%, rgba(248,239,224,0) 19%),
-      linear-gradient(90deg, rgba(248,239,224,0.82) 0%, rgba(248,239,224,0.68) 26%, rgba(248,239,224,0.3) 40%, rgba(248,239,224,0) 52%);
+      linear-gradient(180deg, rgba(20,19,17,0.42) 0%, rgba(20,19,17,0) 22%, rgba(20,19,17,0) 34%, rgba(20,19,17,0.62) 60%, rgba(20,19,17,0.72) 100%),
+      linear-gradient(90deg, rgba(20,19,17,0.76) 0%, rgba(20,19,17,0.5) 55%, rgba(20,19,17,0.08) 100%);
   }
-  .hero h1 { font-size: clamp(2.8rem, 5.4vw, 5rem); }
-  .hero p:not(.markets-line) { max-width: 38ch; }
-  .hero .markets-line { letter-spacing: 0.2em; }
 }
+html[lang="ja"] .hero p:not(.markets-line), html[lang="ko"] .hero p:not(.markets-line) { max-width: 28em; }
