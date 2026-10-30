@@ -1,0 +1,15 @@
+# Conservation Dwelling: HTTPS and clean page addresses (/about serves about.html)
+Options -Indexes
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L]
+
+# Keep the deployment record private
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
