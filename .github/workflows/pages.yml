@@ -52,4 +52,4 @@ jobs:
           password: ${{ secrets.GODADDY_FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./site/
-          server-dir: ./
+          server-dir: ./cdwelling.com/
