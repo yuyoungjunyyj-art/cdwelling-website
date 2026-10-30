@@ -211,7 +211,7 @@ body:not(.has-hero) .site-header {
 }
 /* Light hero: bright plaster photo, charcoal type, a soft paper-coloured veil behind the text */
 .hero .ph { position: absolute; inset: 0; aspect-ratio: auto; background-color: var(--paper); }
-.hero .ph > img { object-position: 60% center; }
+.hero .ph > img { object-position: right center; }
 .hero::before {
   content: "";
   position: absolute; inset: 0; z-index: 1;
@@ -501,23 +501,25 @@ html[lang="ja"] p, html[lang="ko"] p { max-width: 38em; }
 
 .nav a, .lang-switch { white-space: nowrap; }
 
-/* Hero: dusk photo at every width with light type on top */
-.hero { color: var(--paper); background: #1f2522; }
-.hero::before {
-  background:
-    linear-gradient(90deg, rgba(18,20,18,0.62) 0%, rgba(18,20,18,0.34) 42%, rgba(18,20,18,0) 68%),
-    linear-gradient(180deg, rgba(18,20,18,0.5) 0%, rgba(18,20,18,0) 26%, rgba(18,20,18,0) 60%, rgba(18,20,18,0.5) 100%);
-}
-.hero p { color: rgba(236, 230, 220, 0.92); }
-.hero .markets-line { color: rgba(236, 230, 220, 0.8); }
-.hero .btn--solid { background: var(--paper); color: var(--charcoal); border-color: var(--paper); }
-.hero .btn--solid:hover { background: var(--stone); border-color: var(--stone); }
-body.has-hero:not(.nav-open) .site-header:not(.is-solid) { color: var(--paper); }
-/* Phone: the photo is cropped tall, so the veil runs top to bottom behind the text */
-@media (max-width: 700px) {
-  .hero::before {
-    background: linear-gradient(180deg, rgba(18,20,18,0.5) 0%, rgba(18,20,18,0.42) 30%, rgba(18,20,18,0.62) 60%, rgba(18,20,18,0.82) 100%);
-  }
+/* Hero: light illustration at every width with charcoal type; the empty left side of the image holds the text */
+@media (max-width: 1000px) {
+  .hero::before { background: rgba(236,230,220,0.62); }
+  .hero .ph > img { object-position: 66% center; }
 }
 .hero .markets-line { max-width: none; }
 html[lang="ja"] .hero p:not(.markets-line), html[lang="ko"] .hero p:not(.markets-line) { max-width: 28em; }
+
+/* Desktop hero: shift the illustration right so the text sits on its empty paper area, and fade the header zone */
+@media (min-width: 1001px) {
+  .hero { background: #f8efe0; }
+  .hero .ph { background-color: #f8efe0; }
+  .hero .ph > img { transform: translateX(10%); }
+  .hero::before {
+    background:
+      linear-gradient(180deg, rgba(248,239,224,0.94) 0%, rgba(248,239,224,0.72) 9%, rgba(248,239,224,0) 19%),
+      linear-gradient(90deg, #f8efe0 0%, #f8efe0 12%, rgba(248,239,224,0.8) 36%, rgba(248,239,224,0) 52%);
+  }
+  .hero h1 { font-size: clamp(2.8rem, 5.4vw, 5rem); }
+  .hero p:not(.markets-line) { max-width: 40ch; }
+  .hero .markets-line { letter-spacing: 0.2em; }
+}
