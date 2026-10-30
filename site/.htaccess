@@ -1,6 +1,5 @@
 # Conservation Dwelling: HTTPS and clean page addresses (/about serves about.html)
 Options -Indexes
-ErrorDocument 404 /404.html
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/\.well-known/
 RewriteCond %{HTTPS} off
@@ -9,6 +8,13 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+)$ $1.html [L]
+
+# Anything else that does not exist gets the designed 404 page
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/404\.php$
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^ /404.php [L]
 
 # Keep the deployment record private
 <Files ".ftp-deploy-sync-state.json">

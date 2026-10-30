@@ -188,7 +188,8 @@ function notFoundPage() {
     .replace(/\s*<link rel="(canonical|alternate)"[^>]*>/g, "")
     .replace(/\s*<meta property="og:[^>]*>/g, "")
     .replace("</title>", '</title>\n  <meta name="robots" content="noindex">')
-    .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, '$1="/$2"');
+    .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, '$1="/$2"')
+    .replace(/href="\/(ja|ko)\/404\.html"/g, 'href="/$1/"');
   fs.writeFileSync(path.join(OUT, "404.html"), html);
 }
 
