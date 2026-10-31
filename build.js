@@ -1,5 +1,6 @@
 // Builds site/ from src/. Usage: node build.js
 // English pages go to site/, other languages to site/<lang>/.
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const cfg = require("./src/site.config.js");
@@ -143,6 +144,16 @@ function swapImages(html, lang) {
     });
 }
 
+// Add a content hash to asset addresses, so browsers fetch a file again as soon as it changes
+function versionAssets(html) {
+  return html.replace(/((?:src|href)=")((?:\.\.\/|\/)?(assets\/[^"?#]+))"/g, (match, attr, url, rel) => {
+    const file = path.join(OUT, rel);
+    if (!fs.existsSync(file)) return match;
+    const hash = crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").slice(0, 10);
+    return attr + url + "?v=" + hash + '"';
+  });
+}
+
 let count = 0;
 for (const lang of langCodes) {
   fs.mkdirSync(path.join(OUT, dirOf(lang)), { recursive: true });
@@ -164,7 +175,7 @@ for (const lang of langCodes) {
       "",
       footer(lang),
     ].join("\n");
-    fs.writeFileSync(path.join(OUT, dirOf(lang), page + ".html"), html);
+    fs.writeFileSync(path.join(OUT, dirOf(lang), page + ".html"), versionAssets(html));
     count++;
   }
 }
@@ -190,7 +201,7 @@ function notFoundPage() {
     .replace("</title>", '</title>\n  <meta name="robots" content="noindex">')
     .replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"]+)"/g, '$1="/$2"')
     .replace(/href="\/(ja|ko)\/404\.html"/g, 'href="/$1/"');
-  fs.writeFileSync(path.join(OUT, "404.html"), html);
+  fs.writeFileSync(path.join(OUT, "404.html"), versionAssets(html));
 }
 
 // Search engine files
